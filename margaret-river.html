@@ -1,0 +1,595 @@
+<title>Cape to Cape</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400;1,6..96,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a monochrome field guide. Ink drawings (canvas) open each chapter, a schematic coast map anchors the middle, the six Wadandi seasons drive the planner. */
+:root{
+  --paper:#ffffff;
+  --ink:#0b0b0b;
+  --ink-2:#3a3a3a;
+  --ink-3:#6f6f6f;
+  --rule:#d6d6d6;
+  --wash:#f2f2f2;
+  --display:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --body:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --gutter:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0a0a0a; --ink:#f4f4f4; --ink-2:#c9c9c9; --ink-3:#8d8d8d; --rule:#2c2c2c; --wash:#151515; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0a0a0a; --ink:#f4f4f4; --ink-2:#c9c9c9; --ink-3:#8d8d8d; --rule:#2c2c2c; --wash:#151515; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter-r)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0}
+p{margin:0}
+
+/* Header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--ink)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.mark{font-family:var(--display);font-style:italic;font-size:22px;text-decoration:none;white-space:nowrap}
+nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+nav a{font-size:14px;text-decoration:none;font-weight:500}
+nav a:hover{text-decoration:underline;text-underline-offset:4px}
+
+/* Hero */
+.hero{position:relative;border-bottom:1px solid var(--ink);overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero .wrap{position:relative;padding-block:96px 72px;display:grid;gap:28px}
+.hero h1{font-size:clamp(48px,9vw,128px);line-height:.92;letter-spacing:-.02em;max-width:11ch}
+.hero h1 em{font-style:italic}
+.hero .lede{max-width:46ch;font-size:19px;color:var(--ink-2);background:var(--paper);padding:4px 0}
+.coords{display:flex;flex-wrap:wrap;gap:8px 28px}
+.coords span{background:var(--paper);padding:2px 0}
+
+/* Facts strip */
+.facts{border-bottom:1px solid var(--ink)}
+.facts .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.fact{padding:24px 20px 24px 0;border-right:1px solid var(--rule);display:grid;gap:4px}
+.fact + .fact{padding-left:20px}
+.fact:last-child{border-right:0}
+.fact b{font-family:var(--display);font-weight:400;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.fact b small{font-size:18px;font-family:var(--body);margin-left:4px}
+.fact span:last-child{font-size:14px;color:var(--ink-2)}
+
+/* Chapters */
+.chapter{border-bottom:1px solid var(--ink)}
+.chapter .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;padding-block:72px}
+.chapter.flip .art{order:2}
+.art{position:relative;aspect-ratio:4/5;max-width:100%;border:1px solid var(--ink);background:var(--paper)}
+.art canvas{width:100%;height:100%;display:block}
+.art figcaption{position:absolute;left:12px;bottom:10px;background:var(--paper);padding:2px 6px}
+figure{margin:0}
+.copy{display:grid;gap:22px;align-content:start;min-width:0}
+.copy h2{font-size:clamp(38px,5vw,64px);line-height:1}
+.copy h2 em{font-style:italic}
+.copy > p{max-width:60ch;color:var(--ink-2);font-size:17px}
+.list{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--ink)}
+.list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.list li strong{font-family:var(--display);font-weight:600;font-size:20px}
+.list li .label{align-self:center;text-align:right}
+.list li p{grid-column:1 / -1;color:var(--ink-2);font-size:15px;max-width:62ch}
+
+/* Map */
+.mapsec .wrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;padding-block:72px}
+.mapbox{border:1px solid var(--ink);overflow-x:auto}
+.mapbox svg{display:block;width:100%;height:auto;min-width:320px}
+.mapbox text{font-family:var(--mono);font-size:9.5px;fill:var(--ink);letter-spacing:.04em}
+.mapbox text.town{font-family:var(--display);font-style:italic;font-size:13px;letter-spacing:0}
+.mapbox text.sea{font-family:var(--display);font-style:italic;font-size:15px;fill:var(--ink-3)}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:14px}
+.legend li{display:flex;align-items:center;gap:12px}
+.legend svg{flex:none}
+.legend line,.legend circle,.legend rect{stroke:var(--ink)}
+
+/* Seasons */
+.seasons .wrap{padding-block:72px;display:grid;gap:32px;grid-template-columns:minmax(0,1fr)}
+.seasons header{display:grid;gap:14px;max-width:70ch}
+.seasons header h2{font-size:clamp(38px,5vw,64px);line-height:1}
+.seasons header p{color:var(--ink-2);font-size:17px}
+.wheel{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:1px solid var(--ink)}
+.wheel button{appearance:none;background:var(--paper);color:var(--ink);border:0;border-right:1px solid var(--ink);padding:16px 12px;text-align:left;cursor:pointer;display:grid;gap:4px;font:inherit}
+.wheel button:last-child{border-right:0}
+.wheel button .nm{font-family:var(--display);font-size:24px;font-style:italic;line-height:1.1}
+.wheel button .mo{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.wheel button:hover{background:var(--wash)}
+.wheel button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.wheel button[aria-selected="true"] .mo{color:var(--paper);opacity:.75}
+.panel{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:40px;border-bottom:1px solid var(--ink);padding-bottom:40px}
+.panel .big{font-family:var(--display);font-size:clamp(56px,8vw,104px);line-height:.9;font-style:italic}
+.panel .desc{font-size:18px;color:var(--ink-2);max-width:56ch;margin-top:16px}
+.doings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;align-content:start}
+.doings div{border-top:1px solid var(--ink);padding:14px 0 18px;display:grid;gap:6px}
+.doings h3{font-family:var(--body);font-weight:600;font-size:16px}
+.doings p{color:var(--ink-2);font-size:15px}
+
+/* Distances */
+.dist .wrap{padding-block:72px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px}
+.dist h2{font-size:clamp(38px,5vw,64px);line-height:1}
+.dist .copy p{max-width:44ch}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:12px 8px 12px 0;border-bottom:1px solid var(--rule);font-size:15px}
+th{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--ink)}
+td.n{font-family:var(--mono);text-align:right;padding-right:0}
+th.n{text-align:right;padding-right:0}
+
+footer{background:var(--ink);color:var(--paper)}
+footer .wrap{padding-block:56px;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px}
+footer h2{font-size:clamp(28px,3.4vw,40px);font-style:italic;line-height:1.15;color:var(--paper)}
+footer p{font-size:14px;opacity:.8;max-width:56ch}
+footer .label{color:var(--paper);opacity:.6}
+
+@media (max-width:860px){
+  nav{display:none}
+  .facts .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fact{border-bottom:1px solid var(--rule)}
+  .fact:nth-child(2){border-right:0}
+  .fact:nth-child(3){padding-left:0}
+  .chapter .wrap,.mapsec .wrap,.dist .wrap,footer .wrap,.panel{grid-template-columns:minmax(0,1fr);gap:32px}
+  .chapter.flip .art{order:0}
+  .art{aspect-ratio:5/4}
+  .wheel{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .wheel button:nth-child(3){border-right:0}
+  .wheel button:nth-child(-n+3){border-bottom:1px solid var(--ink)}
+}
+@media (max-width:480px){
+  .doings{grid-template-columns:minmax(0,1fr)}
+  .wheel{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wheel button{border-right:1px solid var(--ink) !important;border-bottom:1px solid var(--ink)}
+  .wheel button:nth-child(2n){border-right:0 !important}
+  .wheel button:nth-child(n+5){border-bottom:0}
+  .fact b{font-size:36px}
+  .hero .wrap{padding-block:64px 48px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:64px}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top">Cape to Cape</a>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#coast">Coast</a></li>
+        <li><a href="#vines">Vines</a></li>
+        <li><a href="#forest">Forest</a></li>
+        <li><a href="#caves">Caves</a></li>
+        <li><a href="#map">Map</a></li>
+        <li><a href="#seasons">Seasons</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <canvas id="swell" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <span class="label coords"><span>33.95&deg; S</span><span>115.07&deg; E</span><span>Wadandi Boodja</span></span>
+    <h1>Where the forest runs <em>into the sea</em></h1>
+    <p class="lede">The Margaret River region is a narrow ridge of limestone and granite at the south-west tip of Australia. On one side, Indian Ocean swell. On the other, vineyards, karri forest and more than a hundred caves.</p>
+  </div>
+</section>
+
+<section class="facts" aria-label="The region in numbers">
+  <div class="wrap">
+    <div class="fact"><span class="label">Coastline walk</span><b>123<small>km</small></b><span>Cape Naturaliste to Cape Leeuwin on foot</span></div>
+    <div class="fact"><span class="label">First vines</span><b>1967</b><span>Planted at Wilyabrup, two years after a study named the region</span></div>
+    <div class="fact"><span class="label">Caves on the ridge</span><b>100<small>+</small></b><span>Four of them open as show caves</span></div>
+    <div class="fact"><span class="label">From Perth</span><b>3<small>hrs</small></b><span>About 270 km south by road</span></div>
+  </div>
+</section>
+
+<section class="chapter" id="coast">
+  <div class="wrap">
+    <figure class="art"><canvas id="c-coast" aria-label="Ink drawing of swell lines breaking on a reef"></canvas><figcaption class="label">I. Coast</figcaption></figure>
+    <div class="copy">
+      <span class="label">Chapter one</span>
+      <h2>Swell that has crossed <em>an ocean</em></h2>
+      <p>Storms deep in the Southern Ocean send long-period swell north-east until it meets the reefs off Prevelly and Yallingup. Surfers come for the power. Everyone else comes for the colour of the water, the granite headlands and the quiet bays sheltered from the westerly.</p>
+      <ul class="list">
+        <li><strong>Surfers Point</strong><span class="label">Prevelly</span><p>The main break, home to the region's international surf contest each autumn. Watch from the lookout at the river mouth.</p></li>
+        <li><strong>Hamelin Bay</strong><span class="label">South coast</span><p>Old jetty pylons, calm water and wild stingrays that cruise the shallows near the boat ramp.</p></li>
+        <li><strong>Canal Rocks</strong><span class="label">Yallingup</span><p>A chain of split granite islands joined by a footbridge, with the sea surging through the gaps.</p></li>
+        <li><strong>Meelup Beach</strong><span class="label">Geographe Bay</span><p>North-facing and sheltered. The swimming beach for families on a windy day.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="chapter flip" id="vines">
+  <div class="wrap">
+    <figure class="art"><canvas id="c-vines" aria-label="Ink drawing of vine rows running to the horizon"></canvas><figcaption class="label">II. Vines</figcaption></figure>
+    <div class="copy">
+      <span class="label">Chapter two</span>
+      <h2>A maritime climate in <em>every glass</em></h2>
+      <p>In 1965 an agronomist compared Margaret River's weather with Bordeaux and found it close. The first vines went into the gravel loam at Wilyabrup two years later. The ocean keeps summers mild and winters wet, which gives slow ripening and wines with structure.</p>
+      <ul class="list">
+        <li><strong>Cabernet Sauvignon</strong><span class="label">Red</span><p>The signature red. Firm, cedar and blackcurrant, built to age.</p></li>
+        <li><strong>Chardonnay</strong><span class="label">White</span><p>Rich but tight, with natural acidity from the sea breeze.</p></li>
+        <li><strong>Semillon Sauvignon Blanc</strong><span class="label">Blend</span><p>The local white blend. Crisp, grassy and made for oysters.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="forest">
+  <div class="wrap">
+    <figure class="art"><canvas id="c-forest" aria-label="Ink drawing of tall karri trunks"></canvas><figcaption class="label">III. Forest</figcaption></figure>
+    <div class="copy">
+      <span class="label">Chapter three</span>
+      <h2>Karri, pale and <em>impossibly tall</em></h2>
+      <p>Boranup Forest grows on a thin strip of soil just behind the dunes. The karri here are regrowth after logging a century ago, and they already reach past sixty metres. Their bark sheds in summer, leaving smooth trunks in grey, cream and salmon.</p>
+      <ul class="list">
+        <li><strong>Boranup Drive</strong><span class="label">14 km gravel</span><p>A slow, unsealed road through the middle of the forest, with a lookout to the coast.</p></li>
+        <li><strong>Ellensbrook</strong><span class="label">Walk trail</span><p>A short walk from a homestead built in 1857 to Meekadarabee Falls, a cave behind a curtain of water.</p></li>
+        <li><strong>Cape to Cape Track</strong><span class="label">5 to 8 days</span><p>The full walk follows cliffs, beaches and forest between the two lighthouses.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="chapter flip" id="caves">
+  <div class="wrap">
+    <figure class="art"><canvas id="c-caves" aria-label="Ink drawing of stalactites in a limestone cave"></canvas><figcaption class="label">IV. Caves</figcaption></figure>
+    <div class="copy">
+      <span class="label">Chapter four</span>
+      <h2>A ridge of limestone, <em>hollowed out</em></h2>
+      <p>Rain filtering through the Leeuwin-Naturaliste Ridge has carved over a hundred caves. They hold a steady temperature all year, so they make a good plan for a wet winter day.</p>
+      <ul class="list">
+        <li><strong>Jewel Cave</strong><span class="label">Near Augusta</span><p>The largest show cave in Western Australia, with one of the longest straw stalactites found in a tourist cave.</p></li>
+        <li><strong>Lake Cave</strong><span class="label">Boranup</span><p>Reached down a deep collapsed doline. A still lake reflects a suspended table formation.</p></li>
+        <li><strong>Mammoth Cave</strong><span class="label">Self-guided</span><p>Fossils of extinct megafauna were found in its floor.</p></li>
+        <li><strong>Ngilgi Cave</strong><span class="label">Yallingup</span><p>Named in a Wadandi story of a battle between a good and an evil spirit.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="mapsec chapter" id="map">
+  <div class="wrap">
+    <figure class="mapbox" id="mapbox" aria-label="Schematic map of the Margaret River region from Cape Naturaliste to Cape Leeuwin"></figure>
+    <div class="copy">
+      <span class="label">The lay of the land</span>
+      <h2>Between two <em>lighthouses</em></h2>
+      <p>The whole region fits in a strip about 100 km long and rarely more than 30 km wide. Cape Naturaliste looks north over Geographe Bay. Cape Leeuwin, at the bottom, is where the Indian and Southern Oceans meet.</p>
+      <ul class="legend">
+        <li><svg width="30" height="10" aria-hidden="true"><line x1="0" y1="5" x2="30" y2="5" stroke-width="1.5" stroke-dasharray="4 3"/></svg>Cape to Cape Track</li>
+        <li><svg width="30" height="10" aria-hidden="true"><circle cx="15" cy="5" r="3.5" fill="var(--ink)"/></svg>Town</li>
+        <li><svg width="30" height="10" aria-hidden="true"><rect x="11" y="1" width="8" height="8" fill="var(--paper)" stroke-width="1.2" transform="rotate(45 15 5)"/></svg>Cave</li>
+        <li><svg width="30" height="10" aria-hidden="true"><circle cx="15" cy="5" r="4" fill="var(--paper)" stroke-width="1.2"/></svg>Lighthouse or beach</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="seasons chapter" id="seasons">
+  <div class="wrap">
+    <header>
+      <span class="label">When to come</span>
+      <h2>Six seasons, <em>not four</em></h2>
+      <p>The Wadandi people, the saltwater people of this coast, read the year in six seasons tied to weather, plants and animals. Pick one to see what the region is doing.</p>
+    </header>
+    <div class="wheel" role="tablist" aria-label="Wadandi seasons" id="wheel"></div>
+    <div class="panel" role="tabpanel" id="panel" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="dist chapter" id="getting-here">
+  <div class="wrap">
+    <div class="copy">
+      <span class="label">Getting here</span>
+      <h2>Road distances</h2>
+      <p>Most visitors drive down from Perth along the Forrest Highway and Bussell Highway. Busselton has the nearest airport. Figures are approximate and measured to Margaret River town.</p>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>From</th><th>Direction</th><th class="n">Distance</th><th class="n">Drive</th></tr></thead>
+        <tbody>
+          <tr><td>Perth</td><td>North</td><td class="n">270 km</td><td class="n">3 h</td></tr>
+          <tr><td>Busselton</td><td>North-east</td><td class="n">48 km</td><td class="n">40 min</td></tr>
+          <tr><td>Dunsborough</td><td>North</td><td class="n">42 km</td><td class="n">35 min</td></tr>
+          <tr><td>Yallingup</td><td>North</td><td class="n">37 km</td><td class="n">35 min</td></tr>
+          <tr><td>Prevelly</td><td>West</td><td class="n">9 km</td><td class="n">10 min</td></tr>
+          <tr><td>Augusta</td><td>South</td><td class="n">43 km</td><td class="n">35 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>We acknowledge the Wadandi people as the traditional custodians of this land and sea.</h2>
+    <div style="display:grid;gap:12px;align-content:end">
+      <span class="label">Cape to Cape</span>
+      <p>An unofficial guide to the Margaret River region of Western Australia. Check track, road and cave conditions with local operators before you travel.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  // seeded random for stable drawings
+  function rng(seed){ let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+
+  function fit(cv){
+    const r = cv.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.max(1, Math.round(r.width * d)); cv.height = Math.max(1, Math.round(r.height * d));
+    const ctx = cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0);
+    return { ctx, w: r.width, h: r.height };
+  }
+
+  /* Hero swell: contour lines that drift */
+  const swell = document.getElementById('swell');
+  let t = 0, raf = null;
+  function drawSwell(){
+    const { ctx, w, h } = fit(swell);
+    const ink = css('--ink'), paper = css('--paper');
+    ctx.fillStyle = paper; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle = ink;
+    const lines = Math.round(h / 11);
+    for (let i = 0; i < lines; i++){
+      const y0 = i * 11 + 6, k = i / lines;
+      ctx.globalAlpha = 0.12 + 0.55 * Math.pow(k, 1.6);
+      ctx.lineWidth = 0.6 + k * 0.9;
+      ctx.beginPath();
+      for (let x = 0; x <= w; x += 6){
+        const y = y0
+          + Math.sin(x * 0.006 + t * 0.6 + i * 0.35) * (4 + k * 10)
+          + Math.sin(x * 0.017 - t * 0.9 + i * 0.12) * (1.5 + k * 4)
+          + Math.sin(x * 0.0021 + i * 0.05) * 14;
+        x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(){ t += 0.012; drawSwell(); raf = requestAnimationFrame(loop); }
+
+  /* Chapter drawings */
+  function drawCoast(){
+    const cv = document.getElementById('c-coast'), { ctx, w, h } = fit(cv), r = rng(7);
+    const ink = css('--ink'); ctx.clearRect(0,0,w,h); ctx.strokeStyle = ink; ctx.fillStyle = ink;
+    // horizon
+    const hz = h * 0.28;
+    ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0,hz); ctx.lineTo(w,hz); ctx.stroke();
+    // sun
+    ctx.beginPath(); ctx.arc(w*0.72, hz - 26, 18, 0, Math.PI*2); ctx.lineWidth = 1; ctx.stroke();
+    for (let i=0;i<6;i++){ ctx.beginPath(); ctx.moveTo(w*0.72-30+i*2, hz+6+i*7); ctx.lineTo(w*0.72+30-i*2, hz+6+i*7); ctx.globalAlpha=.5; ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    // swell sets, getting bigger toward viewer
+    for (let i=0;i<34;i++){
+      const k = i/34, y = hz + 8 + Math.pow(k,1.7) * (h - hz - 20);
+      ctx.lineWidth = 0.5 + k*1.6; ctx.globalAlpha = 0.35 + k*0.6;
+      ctx.beginPath();
+      for (let x=0;x<=w;x+=4){
+        const yy = y + Math.sin(x*(0.03-0.02*k) + i) * (1 + k*5);
+        x ? ctx.lineTo(x,yy) : ctx.moveTo(x,yy);
+      }
+      ctx.stroke();
+    }
+    // breaking wave lip with spray dots
+    ctx.globalAlpha = 1; ctx.lineWidth = 2;
+    const by = h*0.66;
+    ctx.beginPath(); ctx.moveTo(w*0.05, by+30);
+    ctx.bezierCurveTo(w*0.35, by-10, w*0.55, by-60, w*0.7, by-40);
+    ctx.bezierCurveTo(w*0.78, by-30, w*0.78, by-6, w*0.7, by+4);
+    ctx.stroke();
+    for (let i=0;i<220;i++){
+      const a = r()*Math.PI, d = r()*40;
+      ctx.globalAlpha = r()*.8;
+      ctx.fillRect(w*0.7 + Math.cos(a)*d*1.4, by-40 - Math.sin(a)*d*0.9, 1.4, 1.4);
+    }
+    ctx.globalAlpha = 1;
+    // granite rocks
+    ctx.fillStyle = ink;
+    [[0.08,0.86,40],[0.16,0.9,26],[0.86,0.84,34]].forEach(([x,y,s])=>{
+      ctx.beginPath(); ctx.ellipse(w*x, h*y, s, s*0.45, 0, Math.PI, 0); ctx.fill();
+    });
+  }
+
+  function drawVines(){
+    const cv = document.getElementById('c-vines'), { ctx, w, h } = fit(cv), r = rng(21);
+    const ink = css('--ink'); ctx.clearRect(0,0,w,h); ctx.strokeStyle = ink; ctx.fillStyle = ink;
+    const hz = h*0.32, vx = w*0.58;
+    // hills
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0,hz-10);
+    ctx.bezierCurveTo(w*0.2,hz-50,w*0.4,hz-20,w*0.55,hz-30); ctx.bezierCurveTo(w*0.75,hz-44,w*0.9,hz-12,w,hz-22); ctx.stroke();
+    // distant tree line
+    for (let x=0;x<w;x+=3){ const hh = 4 + r()*10; ctx.globalAlpha=.6; ctx.fillRect(x, hz-hh, 2, hh); }
+    ctx.globalAlpha = 1;
+    // rows converging
+    const rows = 22;
+    for (let i=-rows;i<=rows;i++){
+      const bx = vx + i * (w/7);
+      ctx.lineWidth = 0.6; ctx.globalAlpha = .55;
+      ctx.beginPath(); ctx.moveTo(vx + i*2, hz); ctx.lineTo(bx, h); ctx.stroke();
+      // foliage clusters along the row
+      ctx.globalAlpha = 1;
+      for (let s=0;s<60;s++){
+        const p = Math.pow(s/60, 1.9), x = vx + i*2 + (bx - vx - i*2)*p, y = hz + (h-hz)*p;
+        const sz = 0.6 + p*7;
+        for (let j=0;j<3;j++){
+          ctx.beginPath(); ctx.arc(x + (r()-.5)*sz*2.2, y - sz*1.2 - r()*sz, sz*(0.4+r()*0.5), 0, Math.PI*2);
+          if (r() < .55) ctx.fill(); else { ctx.lineWidth=.6; ctx.stroke(); }
+        }
+        if (p > 0.15 && s % 4 === 0){ ctx.lineWidth = .8; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y-sz*1.6); ctx.stroke(); }
+      }
+    }
+  }
+
+  function drawForest(){
+    const cv = document.getElementById('c-forest'), { ctx, w, h } = fit(cv), r = rng(3);
+    const ink = css('--ink'), paper = css('--paper'); ctx.clearRect(0,0,w,h);
+    // background trunks light, foreground heavy
+    const layers = [{n:26,a:.25,wmin:3,wmax:7},{n:14,a:.55,wmin:7,wmax:14},{n:6,a:1,wmin:16,wmax:34}];
+    layers.forEach((L,li)=>{
+      for (let i=0;i<L.n;i++){
+        const x = r()*w, tw = L.wmin + r()*(L.wmax-L.wmin), lean = (r()-.5)*10;
+        ctx.globalAlpha = L.a;
+        ctx.fillStyle = paper; ctx.strokeStyle = ink; ctx.lineWidth = li===2?1.4:1;
+        ctx.beginPath(); ctx.moveTo(x - tw/2, h); ctx.lineTo(x - tw/2*0.7 + lean, -10); ctx.lineTo(x + tw/2*0.7 + lean, -10); ctx.lineTo(x + tw/2, h); ctx.closePath();
+        ctx.fill(); ctx.stroke();
+        // shedding bark patches
+        if (li > 0){
+          ctx.fillStyle = ink;
+          for (let b=0;b<(li===2?26:10);b++){
+            const y = r()*h, ph = 6 + r()*30, off = (y/h);
+            const cx = x + lean*(1-off) + (r()-.5)*tw*0.5;
+            ctx.globalAlpha = L.a * (0.25 + r()*0.5);
+            ctx.beginPath(); ctx.ellipse(cx, y, tw*0.12 + r()*tw*0.15, ph/2, 0, 0, Math.PI*2); ctx.fill();
+          }
+        }
+      }
+    });
+    ctx.globalAlpha = 1;
+    // understorey
+    ctx.strokeStyle = ink; ctx.lineWidth = .7;
+    for (let i=0;i<260;i++){
+      const x = r()*w, y = h - r()*h*0.16, l = 6 + r()*18, a = -Math.PI/2 + (r()-.5)*1.2;
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+Math.cos(a)*l, y+Math.sin(a)*l); ctx.stroke();
+    }
+  }
+
+  function drawCaves(){
+    const cv = document.getElementById('c-caves'), { ctx, w, h } = fit(cv), r = rng(11);
+    const ink = css('--ink'), paper = css('--paper'); ctx.clearRect(0,0,w,h);
+    // dark rock mass framing an opening
+    ctx.fillStyle = ink; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = paper;
+    ctx.beginPath();
+    ctx.moveTo(w*0.08, h*0.92);
+    ctx.bezierCurveTo(w*0.02, h*0.5, w*0.12, h*0.16, w*0.5, h*0.14);
+    ctx.bezierCurveTo(w*0.88, h*0.16, w*0.98, h*0.5, w*0.92, h*0.92);
+    ctx.closePath(); ctx.fill();
+    // stalactites hanging from the roof curve
+    ctx.fillStyle = ink;
+    for (let i=0;i<70;i++){
+      const u = r(), x = w*(0.1 + u*0.8);
+      const roof = h*0.14 + Math.pow((u-.5)*2,2) * h*0.3;
+      const len = 10 + Math.pow(r(),2)*h*0.38, bw = 2 + r()*9;
+      ctx.beginPath(); ctx.moveTo(x-bw, roof-2); ctx.quadraticCurveTo(x - bw*0.2, roof + len*0.6, x, roof+len); ctx.quadraticCurveTo(x + bw*0.2, roof + len*0.6, x+bw, roof-2); ctx.fill();
+    }
+    // stalagmites from floor
+    for (let i=0;i<26;i++){
+      const x = w*(0.14 + r()*0.72), base = h*0.92, len = 8 + Math.pow(r(),2)*h*0.2, bw = 3+r()*10;
+      ctx.beginPath(); ctx.moveTo(x-bw, base+2); ctx.quadraticCurveTo(x-bw*.2, base-len*.6, x, base-len); ctx.quadraticCurveTo(x+bw*.2, base-len*.6, x+bw, base+2); ctx.fill();
+    }
+    // still lake reflection lines
+    ctx.strokeStyle = ink; ctx.lineWidth = .7;
+    for (let i=0;i<9;i++){
+      const y = h*0.8 + i*5;
+      ctx.globalAlpha = .5 - i*0.04;
+      ctx.beginPath(); ctx.moveTo(w*0.22 + i*6, y); ctx.lineTo(w*0.78 - i*6, y); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* Schematic map */
+  function buildMap(){
+    const W = 440, H = 640, lon0 = 114.86, lat0 = -33.47, kx = 1150*0.83, ky = 1150*0.56;
+    const P = (lon, lat) => [((lon - lon0) * kx * 0.62).toFixed(1), ((lat0 - lat) * ky).toFixed(1)];
+    const coast = [
+      [115.45,-33.63],[115.35,-33.645],[115.25,-33.64],[115.17,-33.625],[115.10,-33.605],[115.07,-33.585],[115.05,-33.56],[115.04,-33.545],
+      [115.02,-33.53],[115.005,-33.535],[115.00,-33.56],[115.01,-33.60],[115.03,-33.64],[115.035,-33.66],[115.015,-33.675],[115.02,-33.70],
+      [114.99,-33.72],[114.995,-33.78],[114.985,-33.84],[114.985,-33.86],[114.99,-33.91],[114.985,-33.97],[114.995,-33.99],[115.00,-34.04],
+      [115.01,-34.10],[115.03,-34.14],[115.03,-34.22],[115.06,-34.27],[115.10,-34.32],[115.135,-34.375],[115.16,-34.36],[115.17,-34.33],
+      [115.20,-34.32],[115.30,-34.33],[115.45,-34.34]
+    ];
+    const land = 'M' + coast.map(c=>P(...c).join(',')).join(' L') + ` L${W},${H} L${W},0 Z`;
+    const landPath = coast.map(c=>P(...c).join(',')).join(' L');
+    const track = coast.slice(9, 30).map(([lo,la])=>[lo+0.013, la]).map(c=>P(...c).join(',')).join(' L');
+    const towns = [['Margaret River',115.075,-33.955],['Cowaramup',115.10,-33.85],['Dunsborough',115.105,-33.62],['Busselton',115.345,-33.66],['Augusta',115.16,-34.32],['Witchcliffe',115.10,-34.025]];
+    const caves = [['Ngilgi',115.045,-33.645],['Mammoth',115.035,-34.06],['Lake',115.035,-34.085],['Jewel',115.10,-34.27]];
+    const spots = [['Cape Naturaliste',115.015,-33.53,'r'],['Yallingup',115.03,-33.645,'l'],['Gracetown',114.985,-33.865,'l'],['Prevelly',114.99,-33.975,'l'],['Hamelin Bay',115.03,-34.22,'l'],['Cape Leeuwin',115.135,-34.375,'l']];
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="mt"><title id="mt">Schematic map of the Margaret River region</title>
+      <defs><pattern id="sea" width="10" height="7" patternUnits="userSpaceOnUse"><path d="M0 3.5 Q2.5 1.5 5 3.5 T10 3.5" fill="none" stroke="var(--ink)" stroke-width=".5" opacity=".45"/></pattern></defs>
+      <rect width="${W}" height="${H}" fill="url(#sea)"/>
+      <path d="${land}" fill="var(--paper)"/>
+      <path d="M${landPath}" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+      <path d="M${track}" fill="none" stroke="var(--ink)" stroke-width="1.3" stroke-dasharray="4 3"/>
+      <text class="sea" x="34" y="420" transform="rotate(-90 34 420)">Indian Ocean</text>
+      <text class="sea" x="250" y="${H-24}">Southern Ocean</text>
+      <text class="sea" x="250" y="40">Geographe Bay</text>`;
+    // compass and scale
+    s += `<g transform="translate(${W-40},${H-110})"><line x1="0" y1="18" x2="0" y2="-12" stroke="var(--ink)"/><path d="M-5 -6 L0 -16 L5 -6 Z" fill="var(--ink)"/><text x="-3.5" y="32">N</text></g>`;
+    const tenKm = (10/ (111*0.83)) * kx * 0.62;
+    s += `<g transform="translate(${W-40-tenKm},${H-60})"><line x1="0" y1="0" x2="${tenKm.toFixed(1)}" y2="0" stroke="var(--ink)" stroke-width="1.4"/><line x1="0" y1="-4" x2="0" y2="4" stroke="var(--ink)"/><line x1="${tenKm.toFixed(1)}" y1="-4" x2="${tenKm.toFixed(1)}" y2="4" stroke="var(--ink)"/><text x="0" y="-8">10 km</text></g>`;
+    towns.forEach(([n,lo,la])=>{ const [x,y]=P(lo,la); s += `<circle cx="${x}" cy="${y}" r="3.5" fill="var(--ink)"/><text class="town" x="${+x+8}" y="${+y+4}">${n}</text>`; });
+    caves.forEach(([n,lo,la])=>{ const [x,y]=P(lo,la); s += `<rect x="${x-3.5}" y="${y-3.5}" width="7" height="7" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.2" transform="rotate(45 ${x} ${y})"/><text x="${+x+9}" y="${+y+3}">${n.toUpperCase()} CAVE</text>`; });
+    spots.forEach(([n,lo,la,side])=>{ const [x,y]=P(lo,la); const anchor = side==='l' ? 'end' : 'start'; const dx = side==='l' ? -8 : 8;
+      s += `<circle cx="${x}" cy="${y}" r="4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.2"/><text x="${+x+dx}" y="${+y+3}" text-anchor="${anchor}" style="paint-order:stroke;stroke:var(--paper);stroke-width:3px">${n.toUpperCase()}</text>`; });
+    s += `<text x="${P(115.06,-34.16)[0]}" y="${P(115.06,-34.16)[1]}" style="font-family:var(--display);font-style:italic;font-size:12px;fill:var(--ink-3)">Boranup Forest</text>`;
+    s += `</svg>`;
+    document.getElementById('mapbox').innerHTML = s;
+  }
+
+  /* Seasons */
+  const seasons = [
+    { n:'Birak', m:'Dec to Jan', d:'Dry and warm. Easterly winds in the morning, a cool sea breeze by afternoon. The Wadandi traditionally burned country in mosaics at this time.',
+      a:[['Swim the bays','Meelup and Bunker Bay are glassy before the sea breeze arrives.'],['Snorkel Canal Rocks','Clear water and fish sheltering among the granite.'],['Twilight tastings','Long evenings at the cellar doors, light until after 8 pm.'],['Watch the vines','Grapes set and swell on the vine ahead of vintage.']] },
+    { n:'Bunuru', m:'Feb to Mar', d:'The hottest, driest stretch of the year. Calm oceans and still, warm nights. Fishing in the estuaries was important in this season.',
+      a:[['Vintage begins','White grapes come in first. Harvest crews work through the cool of night.'],['Salmon run','Schools of Australian salmon travel up the coast toward autumn.'],['River mouth','The Margaret River bar is often closed, making a calm lagoon.'],['Early starts','Walk the Cape to Cape in the morning, before the heat.']] },
+    { n:'Djeran', m:'Apr to May', d:'Cooler nights and heavy morning dew. Winds swing to the south-west and the first real swells of the year arrive.',
+      a:[['Surf contest season','The pros arrive at Surfers Point for the autumn event.'],['Red harvest','Cabernet is picked and the region smells of crushed fruit.'],['Golden vines','Leaves turn yellow and red across Wilyabrup.'],['Forest walks','Mild, still days suit Boranup and the Ellensbrook trail.']] },
+    { n:'Makuru', m:'Jun to Jul', d:'Cold and wet. Storms roll in from the west and the swell is at its biggest. The time when people moved inland from the coast.',
+      a:[['Big-wave watching','Sit at the Surfers Point lookout as winter sets break.'],['Go underground','The caves stay the same temperature in any weather.'],['Whales pass','Humpbacks travel north along the coast toward warmer water.'],['Fires and reds','Cellar doors light the fire and open the older vintages.']] },
+    { n:'Djilba', m:'Aug to Sep', d:'Clear cold days mixed with rain. The country turns green and the first wildflowers open in the heath.',
+      a:[['Southern right whales','Mothers and calves rest in Flinders Bay off Augusta.'],['Wildflowers begin','Orchids appear along the coastal tracks.'],['Waterfalls run','Meekadarabee and the creeks behind the dunes are full.'],['Pruning','Vineyard crews cut back canes before budburst.']] },
+    { n:'Kambarang', m:'Oct to Nov', d:'Longer dry days and rising warmth. The heath is at full flower and reptiles come out to sun.',
+      a:[['Peak wildflowers','The cliffs between the capes are covered in colour.'],['Walk the whole track','Mild weather for the full 123 km, cape to cape.'],['Humpbacks return','Whales head south through Geographe Bay with their calves.'],['Budburst','New green shoots appear in the vineyards.']] }
+  ];
+  const wheel = document.getElementById('wheel'), panel = document.getElementById('panel');
+  function monthSeason(){ const m = new Date().getMonth(); return [0,1,1,2,2,3,3,4,4,5,5,0][m]; }
+  function showSeason(i, focus){
+    [...wheel.children].forEach((b,j)=>{ b.setAttribute('aria-selected', j===i); b.tabIndex = j===i ? 0 : -1; });
+    const s = seasons[i];
+    panel.innerHTML = `<div><span class="label">${s.m}${i===monthSeason() ? ' &middot; now' : ''}</span><div class="big">${s.n}</div><p class="desc">${s.d}</p></div>
+      <div class="doings">${s.a.map(([h,p])=>`<div><h3>${h}</h3><p>${p}</p></div>`).join('')}</div>`;
+    if (focus) wheel.children[i].focus();
+    try { localStorage.setItem('mr-season', i); } catch(e){}
+  }
+  seasons.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.type = 'button'; b.id = 'season-' + s.n.toLowerCase(); b.setAttribute('role','tab'); b.setAttribute('aria-controls','panel');
+    b.innerHTML = `<span class="nm">${s.n}</span><span class="mo">${s.m}</span>`;
+    b.addEventListener('click', ()=>showSeason(i));
+    b.addEventListener('keydown', e=>{
+      if (e.key==='ArrowRight'){ e.preventDefault(); showSeason((i+1)%6, true); }
+      if (e.key==='ArrowLeft'){ e.preventDefault(); showSeason((i+5)%6, true); }
+    });
+    wheel.appendChild(b);
+  });
+  let start = monthSeason();
+  try { const v = localStorage.getItem('mr-season'); if (v !== null && seasons[+v]) start = +v; } catch(e){}
+  showSeason(start);
+
+  function drawAll(){ drawSwell(); drawCoast(); drawVines(); drawForest(); drawCaves(); }
+  buildMap();
+  drawAll();
+  if (!reduce) loop();
+
+  let rt; addEventListener('resize', ()=>{ clearTimeout(rt); rt = setTimeout(drawAll, 120); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll);
+  new MutationObserver(drawAll).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+  if (document.fonts) document.fonts.ready.then(drawAll);
+})();
+</script>
